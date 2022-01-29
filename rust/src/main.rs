@@ -12,48 +12,85 @@ pub struct PurchaseStruct {
 pub struct PersonStruct {
     pub person_id: String,
     pub first_name: String,
-    pub last_name: u32,
+    pub last_name: String,
     pub purchases: Vec<PurchaseStruct>,
 }
 
 fn main() {
     println!("Hello, world!");
-    let mut purchase = PurchaseStruct {
+    let laptop_purchase = PurchaseStruct {
         purchase_id: String::from("ord-zzz987"),
         name: String::from("laptop"),
         date: String::from("2022-01-25T02:20:42.832Z"),
         price: 853,
     };
 
-    let mut serializedPurchase = Vec::new();
-    purchase.serialize(&mut serializedPurchase);
-    println!("Serialized length {}", serializedPurchase.len());
-    let raw_deserialized = PurchaseStruct::try_from_slice(&serializedPurchase);
-    let mut deserialized = match raw_deserialized {
-        Ok(T) => {
-            println!("Deserialized successfully");
-            T
+    let headphones_person = PurchaseStruct {
+        purchase_id: String::from("ord-yyy654"),
+        name: String::from("headphones"),
+        date: String::from("2022-01-23T14:12:05.631Z"),
+        price: 853,
+    };
+
+    let person = PersonStruct {
+        person_id: String::from("usr-abc123"),
+        first_name: String::from("John"),
+        last_name: String::from("Doe"),
+        purchases: Vec::from([laptop_purchase, headphones_person]),
+    };
+    let to_print = fmt_person(&person);
+    println!("Print before serialization: {}", to_print);
+    let mut serialized_person = Vec::new();
+    let serialized_result = person.serialize(&mut serialized_person);
+    match serialized_result {
+        Ok(r) => {
+            println!("Serialized successfully");
+            r
         }
-        Err(E) => {
-            panic!("Failed to deserialize");
+        Err(_e) => {
+            panic!("Failed to serialize!");
+        }
+    };
+    println!("Serialized length {}", serialized_person.len());
+    let raw_deserialized = PersonStruct::try_from_slice(&serialized_person);
+    let deserialized = match raw_deserialized {
+        Ok(r) => {
+            println!("Deserialized successfully");
+            r
+        }
+        Err(_e) => {
+            panic!("Failed to deserialize!");
         }
     };
 
-    println!("Deserialized: {}", deserialized.purchase_id);
+    println!("Print after deserialization: {}", fmt_person(&deserialized));
+}
 
-    // println!("Original  {}", greeting_account.aword);
+// Formatter helper functions
+fn fmt_purchase(purchase: &PurchaseStruct) -> String {
+    format!(
+        "
+    ID: {}
+    Name: {}
+    Date: {}
+    Price: {}
+    ",
+        purchase.price, purchase.name, purchase.date, purchase.price
+    )
+}
 
-    // greeting_account.aword = String::from("another one");
-    // let mut result = Vec::new();
-
-    // greeting_account.serialize(&mut result);
-
-    // println!("Origin length {}", result.len());
-
-    // let resp = truncate_vec(&result[..]);
-
-    // let truncatedVec = Vec::from(&result[0..resp]);
-    // println!("Final {}", truncatedVec.len());
-    // let deserialized = GreetingAccount::try_from_slice(&truncatedVec).unwrap();
-    // println!("Deserialized again {}", deserialized.aword);
+fn fmt_person(person: &PersonStruct) -> String {
+    let mut purchases_formatted = String::from("");
+    for purchase in &person.purchases {
+        let purchase_formatted = fmt_purchase(&purchase);
+        purchases_formatted.push_str(&purchase_formatted);
+    }
+    format!(
+        "
+    ID: {}
+    Name: {} {}
+    Purchases: {}
+    ",
+        person.person_id, person.first_name, person.last_name, purchases_formatted
+    )
 }

@@ -74,7 +74,7 @@ const laptopPurchase = new PurchaseStruct({
 const headphonesPurchase = new PurchaseStruct({
     purchase_id: 'ord-yyy654',
     name: 'headphones',
-    date: '2022-01-25T02:20:42.832Z',
+    date: '2022-01-23T14:12:05.631Z',
     price: 63,
 });
 
