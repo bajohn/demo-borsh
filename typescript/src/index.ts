@@ -1,4 +1,5 @@
 import * as borsh from 'borsh';
+import { deserialize } from 'v8';
 
 interface iPurchase {
     purchase_id: string;
@@ -23,6 +24,7 @@ class PurchaseStruct implements iPurchase {
     constructor(fields: iPurchase) {
         Object.assign(this, fields);
     };
+
 };
 
 
@@ -36,7 +38,18 @@ class PersonStruct implements iPerson {
     }
 };
 
-const PurchaseSchema = new Map<any, any>([
+const PersonSchema = new Map<any, any>([
+    [
+        PersonStruct, {
+            kind: 'struct',
+            fields: [
+                ['person_id', 'string'],
+                ['first_name', 'string'],
+                ['last_name', 'string'],
+                ['purchases', [PurchaseStruct]],
+            ]
+        }
+    ],
     [
         PurchaseStruct, {
             kind: 'struct',
@@ -50,27 +63,43 @@ const PurchaseSchema = new Map<any, any>([
     ]
 ]);
 
-const PersonSchema = new Map<any, any>([
-    [
-        PersonStruct, {
-            kind: 'struct',
-            fields: [
-                ['person_id', 'string'],
-                ['first_name', 'string'],
-                ['last_name', 'string'],
-                ['purchases', [PurchaseStruct]],
-            ]
-        }
-    ]
-]);
 
-
-const purchase = new PurchaseStruct({
+const laptopPurchase = new PurchaseStruct({
     purchase_id: 'ord-zzz987',
     name: 'laptop',
     date: '2022-01-25T02:20:42.832Z',
     price: 853,
 });
 
-const serialized = borsh.serialize(PurchaseSchema, purchase);
+const headphonesPurchase = new PurchaseStruct({
+    purchase_id: 'ord-yyy654',
+    name: 'headphones',
+    date: '2022-01-25T02:20:42.832Z',
+    price: 63,
+});
+
+const person = new PersonStruct({
+    person_id: 'usr-abc123',
+    first_name: 'John',
+    last_name: 'Doe',
+    purchases: [
+        laptopPurchase,
+        headphonesPurchase
+    ]
+});
+
+console.log('\n\nPrint before serialization:');
+console.log(JSON.stringify(person, null, 2));
+
+
+const serialized = borsh.serialize(PersonSchema, person);
+console.log('\nLength of serialized byte array:')
 console.log(serialized.length);
+
+const deserialized = borsh.deserialize(
+    PersonSchema,
+    PersonStruct,
+    Buffer.from(serialized)
+);
+console.log('\nPrint after deserialization:');
+console.log(JSON.stringify(deserialized, null, 2));
