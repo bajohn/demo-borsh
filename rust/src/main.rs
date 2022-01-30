@@ -17,7 +17,6 @@ pub struct PersonStruct {
 }
 
 fn main() {
-    println!("Hello, world!");
     let laptop_purchase = PurchaseStruct {
         purchase_id: String::from("ord-zzz987"),
         name: String::from("laptop"),
@@ -29,7 +28,7 @@ fn main() {
         purchase_id: String::from("ord-yyy654"),
         name: String::from("headphones"),
         date: String::from("2022-01-23T14:12:05.631Z"),
-        price: 853,
+        price: 63,
     };
 
     let person = PersonStruct {
@@ -44,18 +43,18 @@ fn main() {
     let serialized_result = person.serialize(&mut serialized_person);
     match serialized_result {
         Ok(r) => {
-            println!("Serialized successfully");
+            println!("Serialized successfully.");
             r
         }
         Err(_e) => {
             panic!("Failed to serialize!");
         }
     };
-    println!("Serialized length {}", serialized_person.len());
+    println!("Length of serialized byte array: {}.", serialized_person.len());
     let raw_deserialized = PersonStruct::try_from_slice(&serialized_person);
     let deserialized = match raw_deserialized {
         Ok(r) => {
-            println!("Deserialized successfully");
+            println!("Deserialized successfully.");
             r
         }
         Err(_e) => {
@@ -70,12 +69,12 @@ fn main() {
 fn fmt_purchase(purchase: &PurchaseStruct) -> String {
     format!(
         "
-    ID: {}
-    Name: {}
-    Date: {}
-    Price: {}
+        ID: {}
+        Name: {}
+        Date: {}
+        Price: {}
     ",
-        purchase.price, purchase.name, purchase.date, purchase.price
+        purchase.purchase_id, purchase.name, purchase.date, purchase.price
     )
 }
 

@@ -93,8 +93,9 @@ console.log(JSON.stringify(person, null, 2));
 
 
 const serialized = borsh.serialize(PersonSchema, person);
-console.log('\nLength of serialized byte array:')
-console.log(serialized.length);
+console.log('\nSerialized successfully.');
+console.log(`Length of serialized byte array: ${serialized.length}.`);
+console.log('Deserialized successfully.');
 
 const deserialized = borsh.deserialize(
     PersonSchema,
