@@ -217,4 +217,4 @@ With these definitions, we can create the same sample data and serialize/deseria
 ```
 
 # Conclusion
-
+Applications that operate in resource-constrained environments can utilize Borsh to ship data between languages using minimal memory. Comment below or contact me with use cases you come across!
