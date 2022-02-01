@@ -50,7 +50,10 @@ fn main() {
             panic!("Failed to serialize!");
         }
     };
-    println!("Length of serialized byte array: {}.", serialized_person.len());
+    println!(
+        "Length of serialized byte array: {}.",
+        serialized_person.len()
+    );
     let raw_deserialized = PersonStruct::try_from_slice(&serialized_person);
     let deserialized = match raw_deserialized {
         Ok(r) => {
