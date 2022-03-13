@@ -24,7 +24,7 @@ fn main() {
         price: 853,
     };
 
-    let headphones_person = PurchaseStruct {
+    let headphones_purchase = PurchaseStruct {
         purchase_id: String::from("ord-yyy654"),
         name: String::from("headphones"),
         date: String::from("2022-01-23T14:12:05.631Z"),
@@ -35,7 +35,7 @@ fn main() {
         person_id: String::from("usr-abc123"),
         first_name: String::from("John"),
         last_name: String::from("Doe"),
-        purchases: Vec::from([laptop_purchase, headphones_person]),
+        purchases: Vec::from([laptop_purchase, headphones_purchase]),
     };
     let to_print = fmt_person(&person);
     println!("Print before serialization: {}", to_print);
